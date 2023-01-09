@@ -259,6 +259,8 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                     } else {
                         nextVideo = videoList.get(index + 1)
                     }
+                } else {
+                    nextVideo = videoList.get(0)
                 }
             }
         //url = videoList.indexOf(urlString).toString()
