@@ -15,14 +15,13 @@
  */
 package com.android.tv.reference.playback
 
-import android.content.pm.ActivityInfo
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.Html
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
@@ -133,36 +132,36 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         } else if(video == null) {
             video = myVideo
         }*/
-
         parseParams()
+        val connection = hasConnection(getActivity()!!.applicationContext)
+        if(connection) {
 
-
-
-        if(myUrl.length < 5) {
-            //Timber.v("my url $myUrl")
-            video = myVideo
+            if(myUrl.length < 5) {
+                //Timber.v("my url $myUrl")
+                video = myVideo
+            } else {
+                //Timber.v("my url2 $myUrl")
+                video = Video(
+                    "https://atv-reference-app.firebaseapp.com/clips-supercharged/supercharged-flatmap",
+                    "KPD group",
+                    "videoItem In this mini series, Surma introduces you to the various functional methods that JavaScript Arrays have to offer. In this episode: map & filter!",
+                    "https://atv-reference-app.firebaseapp.com/clips-supercharged/supercharged-map-and-filter",
+                    myUrl,
+                    "https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter-thumbnail.png",
+                    "https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter-background.jpg",
+                    "Supercharged Clips",
+                    VideoType.CLIP,
+                )
+            }
+            //video = myVideo
+            getWebsite()
+            // Create the MediaSession that will be used throughout the lifecycle of this Fragment.
+            createMediaSession()
         } else {
-            //Timber.v("my url2 $myUrl")
-            video = Video(
-                "https://atv-reference-app.firebaseapp.com/clips-supercharged/supercharged-flatmap",
-                "KPD group",
-                "videoItem In this mini series, Surma introduces you to the various functional methods that JavaScript Arrays have to offer. In this episode: map & filter!",
-                "https://atv-reference-app.firebaseapp.com/clips-supercharged/supercharged-map-and-filter",
-                myUrl,
-                "https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter-thumbnail.png",
-                "https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter-background.jpg",
-                "Supercharged Clips",
-                VideoType.CLIP,
-            )
+            findNavController().navigate(R.id.noFirebaseFragment)
         }
 
 
-        //video = myVideo
-
-
-        getWebsite()
-        // Create the MediaSession that will be used throughout the lifecycle of this Fragment.
-        createMediaSession()
 
       /*  viewModelBrowse = ViewModelProvider(this).get(BrowseViewModel::class.java)
         viewModelBrowse.browseContent.observe(
@@ -422,6 +421,22 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
             paymentItemId = args.getInt(PAYMENT_ITEM_ID, PaymentItem.UNDEFINED_ID)
         }*/
     }
+
+
+    private fun hasConnection(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        if (wifiInfo != null && wifiInfo.isConnected) {
+            return true
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+        if (wifiInfo != null && wifiInfo.isConnected) {
+            return true
+        }
+        wifiInfo = cm.activeNetworkInfo
+        return wifiInfo != null && wifiInfo.isConnected
+    }
+
 
     companion object {
         // Update the player UI fairly often. The frequency of updates affects several UI components

@@ -15,6 +15,8 @@
  */
 package com.android.tv.reference.auth
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -30,16 +32,18 @@ import com.android.tv.reference.playback.PlaybackFragment
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import timber.log.Timber
 import java.io.IOException
 import java.lang.Thread.sleep
-import java.util.ArrayList
+import java.util.*
+
 
 /**
  * Simple Fragment that displays some info about configuring Firebase and has a continue button
  */
 class NoFirebaseFragment : Fragment() {
 
-
+    var mTimer: Timer? = null
     var videoList = ArrayList<String>()
 
     override fun onCreateView(
@@ -57,7 +61,14 @@ class NoFirebaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getWebsite()
+        val connection = hasConnection(getActivity()!!.applicationContext)
+        if(connection) {
+            getWebsite()
+        } else {
+            mTimer = Timer()
+            startAlarm()
+        }
+
         //Toast.makeText(activity, "we are here 1", Toast.LENGTH_SHORT).show()
     }
 
@@ -95,6 +106,50 @@ class NoFirebaseFragment : Fragment() {
                 }
             }
         }.start()
+    }
+
+
+    private fun hasConnection(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        if (wifiInfo != null && wifiInfo.isConnected) {
+            return true
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+        if (wifiInfo != null && wifiInfo.isConnected) {
+            return true
+        }
+        wifiInfo = cm.activeNetworkInfo
+        return wifiInfo != null && wifiInfo.isConnected
+    }
+
+    private fun startAlarm() {
+        mTimer!!.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                val hasConn = hasConnection(getActivity()!!.applicationContext)
+                //Toast.makeText(activity, "запустился метод", Toast.LENGTH_SHORT).show()
+                Timber.v("метод запустился")
+                //Тут отработка метода в отдельном потоке;
+                activity!!.runOnUiThread(
+                    Runnable {
+                        //Тут выход в UI если нужно;
+                        if (hasConn){
+                            cancelTimer()
+                            getWebsite()
+                        }
+                    })
+            }
+        }, 0 // Это задержка старта, сейчас 0;
+            , 6000) // Это Ваш период в 10 минут;
+            //, 600000) // Это Ваш период в 10 минут;
+    }
+
+    private fun cancelTimer() {
+        if (mTimer != null) {
+            mTimer!!.cancel()
+            mTimer = null
+            Timber.v("метод отключился")
+        }
     }
 
 }
