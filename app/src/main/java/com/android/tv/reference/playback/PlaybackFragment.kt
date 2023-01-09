@@ -22,9 +22,12 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.text.Html
 import android.util.Log
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
 import com.android.tv.reference.browse.BrowseViewModel
@@ -175,9 +178,15 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
             }
         )
 */
-
+        goStartFragmentBackPressed()
         //hideControlsOverlay(true)
        // isControlsOverlayAutoHideEnabled = false
+    }
+
+    private fun goStartFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().navigate(R.id.noFirebaseFragment)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
