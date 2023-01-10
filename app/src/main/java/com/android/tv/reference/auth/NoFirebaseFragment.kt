@@ -63,20 +63,25 @@ class NoFirebaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Toast.makeText(activity, "we are here 1", Toast.LENGTH_SHORT).show()
         val connection = hasConnection(getActivity()!!.applicationContext)
         if(connection) {
-            //view.findViewById<TextView>(R.id.title).setText(R.string.no_firebase_title.toString())
-           // view.findViewById<TextView>(R.id.body).setText(R.string.no_firebase_body.toString())
+            view.findViewById<TextView>(R.id.title).setText(R.string.no_firebase_title)
+            view.findViewById<TextView>(R.id.body).setText(R.string.no_firebase_body)
             sleep(2000)
-            getWebsite()
+             getWebsite()
         } else {
-          //  view.findViewById<TextView>(R.id.title).setText(R.string.no_internet_title.toString())
-          //  view.findViewById<TextView>(R.id.body).setText(R.string.no_internet_body.toString())
+            view.findViewById<TextView>(R.id.title).setText(R.string.no_internet_title)
+            view.findViewById<TextView>(R.id.body).setText(R.string.no_internet_body)
             mTimer = Timer()
             startAlarm()
         }
+    }
 
-        //Toast.makeText(activity, "we are here 1", Toast.LENGTH_SHORT).show()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
     }
 
     private fun getWebsite() {

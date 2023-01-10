@@ -20,6 +20,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.Html
+import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
@@ -29,6 +30,7 @@ import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.OnActionClickedListener
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
+import com.android.tv.reference.auth.NoFirebaseFragment
 import com.android.tv.reference.browse.BrowseViewModel
 import com.android.tv.reference.shared.datamodel.Video
 import com.android.tv.reference.shared.datamodel.VideoType
@@ -100,6 +102,13 @@ class PlaybackFragment : VideoSupportFragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val connection = hasConnection(getActivity()!!.applicationContext)
+        if(!connection) {
+          findNavController().navigate(R.id.noFirebaseFragment)
+      }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         /*my video object*/
@@ -137,8 +146,8 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         }*/
 
         parseParams()
-        val connection = hasConnection(getActivity()!!.applicationContext)
-        if(connection) {
+      /*  val connection = hasConnection(getActivity()!!.applicationContext)
+        if(connection) {*/
 
             if(myUrl.length < 5) {
                 //Timber.v("my url $myUrl")
@@ -161,9 +170,9 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
             getWebsite()
             // Create the MediaSession that will be used throughout the lifecycle of this Fragment.
             createMediaSession()
-        } else {
+       /* } else {
             findNavController().navigate(R.id.noFirebaseFragment)
-        }
+        }*/
 
 
 
@@ -366,9 +375,9 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                 videoList = mExampleList
 
             } catch (e: IOException) {
-                findNavController().navigate(R.id.playbackFragment)
+                goToMainFragment()
                 //builder.append("Error : ").append(e.message).append("\n")
-                // Log.d("errorsite", e.message.toString())
+                 Log.d("errorsite", e.message.toString())
             }
 
             requireActivity().runOnUiThread {
@@ -391,6 +400,13 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                 }
             }
         }.start()
+    }
+
+    fun goToMainFragment() {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.nav_host_fragment, NoFirebaseFragment())
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
     private fun initializeTrashPlayer(urlVideo: String) {
