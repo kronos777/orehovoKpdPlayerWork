@@ -22,12 +22,14 @@
     android:paddingVertical="@dimen/overscan_vertical">
 
     <TextView
+        android:id="@+id/title"
         style="@style/Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/no_firebase_title" />
 
     <TextView
+        android:id="@+id/body"
         style="@style/Body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/PortfolioAndroidDevelopment/kpdtvreference/app/src/main/res/layout/activity_main.xml" value="0.27943840579710144" />
+        <entry key="..\:/PortfolioAndroidDevelopment/kpdtvreference/app/src/main/res/layout/fragment_no_firebase.xml" value="0.27943840579710144" />
         <entry key="..\:/advMedia/sampleOrehVideo2/ReferenceAppKotlin/app/src/main/res/layout/fragment_no_firebase.xml" value="0.303125" />
         <entry key="..\:/advMedia/sampleOrehVideo2/ReferenceAppKotlin/app/src/main/res/layout/fragment_profile.xml" value="0.46059782608695654" />
         <entry key="..\:/advMedia/sampleOrehVideo2/ReferenceAppKotlin/app/src/main/res/layout/fragment_sign_in.xml" value="0.303125" />

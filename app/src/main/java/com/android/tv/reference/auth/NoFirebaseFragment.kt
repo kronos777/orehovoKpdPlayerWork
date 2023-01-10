@@ -23,6 +23,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -46,6 +47,7 @@ class NoFirebaseFragment : Fragment() {
     var mTimer: Timer? = null
     var videoList = ArrayList<String>()
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,8 +65,13 @@ class NoFirebaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val connection = hasConnection(getActivity()!!.applicationContext)
         if(connection) {
+            //view.findViewById<TextView>(R.id.title).setText(R.string.no_firebase_title.toString())
+           // view.findViewById<TextView>(R.id.body).setText(R.string.no_firebase_body.toString())
+            sleep(2000)
             getWebsite()
         } else {
+          //  view.findViewById<TextView>(R.id.title).setText(R.string.no_internet_title.toString())
+          //  view.findViewById<TextView>(R.id.body).setText(R.string.no_internet_body.toString())
             mTimer = Timer()
             startAlarm()
         }

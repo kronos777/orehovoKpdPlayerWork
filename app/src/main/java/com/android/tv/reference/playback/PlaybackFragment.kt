@@ -20,14 +20,13 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.Html
-import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
+import androidx.leanback.widget.ArrayObjectAdapter
+import androidx.leanback.widget.OnActionClickedListener
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
 import com.android.tv.reference.browse.BrowseViewModel
@@ -45,6 +44,7 @@ import org.jsoup.select.Elements
 import timber.log.Timber
 import java.io.IOException
 import java.time.Duration
+
 
 /** Fragment that plays video content with ExoPlayer. */
 class PlaybackFragment : VideoSupportFragment() {
@@ -135,6 +135,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         } else if(video == null) {
             video = myVideo
         }*/
+
         parseParams()
         val connection = hasConnection(getActivity()!!.applicationContext)
         if(connection) {
@@ -179,7 +180,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         )
 */
         goStartFragmentBackPressed()
-        //hideControlsOverlay(true)
+       // hideControlsOverlay(true)
        // isControlsOverlayAutoHideEnabled = false
     }
 
@@ -191,7 +192,6 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //view.isVisible = false
         viewModel.addPlaybackStateListener(uiPlaybackStateListener)
     }
 
@@ -202,6 +202,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
 
     override fun onStart() {
         super.onStart()
+        hideControlsOverlay(false)
         //initializePlayer()
     }
 
@@ -240,9 +241,14 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
             })
 
             mediaSession.isActive = true
+
         }
 
         viewModel.onStateChange(VideoPlaybackState.Load(video))
+    }
+
+    override fun showControlsOverlay(runAnimation: Boolean) {
+        // We will do nothing here, and thus controls will never be shown
     }
 
     fun getNextVideo(urlString: String) {
@@ -251,6 +257,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                 val cval = videoList.get(index).trim().dropLast(4)
                 val tval = urlString.trim().dropLast(4)
                 if(cval == tval) {
+                    //Toast.makeText(activity, "совпадения найдено", Toast.LENGTH_SHORT).show()
                    // val gval =  videoList.get(index + 1)
                    // Timber.v("val next vit $tval and $cval next $gval")
                     if(index == videoList.size -1) {
@@ -259,8 +266,6 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                     } else {
                         nextVideo = videoList.get(index + 1)
                     }
-                } else {
-                    nextVideo = videoList.get(0)
                 }
             }
         //url = videoList.indexOf(urlString).toString()
@@ -290,13 +295,15 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
 
         ).apply {
             host = VideoSupportFragmentGlueHost(this@PlaybackFragment)
-            host.setControlsOverlayAutoHideEnabled(false)
-            host.hideControlsOverlay(false)
-           /* title = video.name
+          //  host.showControlsOverlay(false)
+           // host.hideControlsOverlay(false)
+           // host.isControlsOverlayAutoHideEnabled = false
+
+           /* title = video.name*/
             // Enable seek manually since PlaybackTransportControlGlue.getSeekProvider() is null,
             // so that PlayerAdapter.seekTo(long) will be called during user seeking.
             // TODO(gargsahil@): Add a PlaybackSeekDataProvider to support video scrubbing.
-            isSeekEnabled = true*/
+            isSeekEnabled = true
         }
     }
 
@@ -337,6 +344,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                     VideoPlaybackState.End(video))
                 else -> viewModel.onStateChange(
                     VideoPlaybackState.Pause(video, exoplayer!!.currentPosition))
+
             }
         }
     }
@@ -358,8 +366,9 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                 videoList = mExampleList
 
             } catch (e: IOException) {
-                builder.append("Error : ").append(e.message).append("\n")
-                Log.d("errorsite", e.message.toString())
+                findNavController().navigate(R.id.playbackFragment)
+                //builder.append("Error : ").append(e.message).append("\n")
+                // Log.d("errorsite", e.message.toString())
             }
 
             requireActivity().runOnUiThread {
@@ -388,11 +397,13 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         val dataSourceFactory = DefaultDataSource.Factory(requireContext())
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).
         createMediaSource(MediaItem.fromUri((urlVideo)))
+
         exoplayer = ExoPlayer.Builder(requireContext()).build().apply {
             setMediaSource(mediaSource)
             prepare()
             addListener(PlayerEventListener())
             prepareGlue(this)
+
             mediaSessionConnector.setPlayer(object: ForwardingPlayer(this) {
                 override fun stop() {
                     // Treat stop commands as pause, this keeps ExoPlayer, MediaSession, etc.
@@ -402,7 +413,6 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                     Timber.v("Playback stopped at $currentPosition")
                     // This both prevents playback from starting automatically and pauses it if
                     // it's already playing
-
                     playWhenReady = false
                 }
             })
@@ -461,4 +471,11 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         const val VIDEOURL : String = ""
 
     }
+
+
+
+
+
+
+
 }

@@ -19,7 +19,9 @@
 
     <!-- Strings for the "No Firebase" screen -->
     <string name="no_firebase_title">KPD</string>
+    <string name="no_internet_title">нет интернета</string>
     <string name="no_firebase_body">media group - рекламная медиа группа занимающаяся полным спектром рекламных услуг на территории Московской области.</string>
+    <string name="no_internet_body">В настоящий момент отсутствует интернет, при подключении к интернету приложение само продолжит работу.</string>
     <string name="continue_text">Начать работу</string>
 
     <!-- Menus -->
