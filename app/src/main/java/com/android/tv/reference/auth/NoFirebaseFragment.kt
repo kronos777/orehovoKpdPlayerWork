@@ -54,10 +54,6 @@ class NoFirebaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentNoFirebaseBinding.inflate(inflater, container, false)
-       /* binding.continueButton.setOnClickListener {
-            findNavController()
-                .navigate(NoFirebaseFragmentDirections.actionNoFirebaseFragmentToBrowseFragment())
-        }*/
         return binding.root
     }
 
@@ -102,7 +98,7 @@ class NoFirebaseFragment : Fragment() {
 
             } catch (e: IOException) {
                 builder.append("Error : ").append(e.message).append("\n")
-                Log.d("errorsite", e.message.toString())
+               // Log.d("errorsite", e.message.toString())
             }
 
             requireActivity().runOnUiThread {
@@ -140,7 +136,7 @@ class NoFirebaseFragment : Fragment() {
             override fun run() {
                 val hasConn = hasConnection(getActivity()!!.applicationContext)
                 //Toast.makeText(activity, "запустился метод", Toast.LENGTH_SHORT).show()
-                Timber.v("метод запустился")
+                //Timber.v("метод запустился")
                 //Тут отработка метода в отдельном потоке;
                 activity!!.runOnUiThread(
                     Runnable {
@@ -160,7 +156,7 @@ class NoFirebaseFragment : Fragment() {
         if (mTimer != null) {
             mTimer!!.cancel()
             mTimer = null
-            Timber.v("метод отключился")
+           // Timber.v("метод отключился")
         }
     }
 

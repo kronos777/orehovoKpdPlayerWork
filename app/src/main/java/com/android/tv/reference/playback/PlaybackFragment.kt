@@ -341,7 +341,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
 
     inner class PlayerEventListener : Player.Listener {
         override fun onPlayerError(error: PlaybackException) {
-            Timber.w(error, "Playback error")
+           // Timber.w(error, "Playback error")
             viewModel.onStateChange(VideoPlaybackState.Error(video, error))
         }
 
@@ -377,7 +377,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
             } catch (e: IOException) {
                 goToMainFragment()
                 //builder.append("Error : ").append(e.message).append("\n")
-                 Log.d("errorsite", e.message.toString())
+               //  Log.d("errorsite", e.message.toString())
             }
 
             requireActivity().runOnUiThread {
@@ -426,7 +426,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                     // in memory to allow for quickly resuming. This also maintains the playback
                     // position so that the user will resume from the current position when backing
                     // out and returning to this video
-                    Timber.v("Playback stopped at $currentPosition")
+                   // Timber.v("Playback stopped at $currentPosition")
                     // This both prevents playback from starting automatically and pauses it if
                     // it's already playing
                     playWhenReady = false
