@@ -62,7 +62,7 @@ class PlaybackFragment : VideoSupportFragment() {
     private lateinit var myUrl: String
 
     var videoList = ArrayList<String>()
-    var videoCounter = 0
+
     lateinit var currentVideo: String
     lateinit var nextVideo: String
 
@@ -262,13 +262,15 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
 
     fun getNextVideo(urlString: String) {
 
+
+        if(videoList.size > 1) {
             for (index in videoList.indices) {
                 val cval = videoList.get(index).trim().dropLast(4)
                 val tval = urlString.trim().dropLast(4)
                 if(cval == tval) {
                     //Toast.makeText(activity, "совпадения найдено", Toast.LENGTH_SHORT).show()
-                   // val gval =  videoList.get(index + 1)
-                   // Timber.v("val next vit $tval and $cval next $gval")
+                    // val gval =  videoList.get(index + 1)
+                    // Timber.v("val next vit $tval and $cval next $gval")
                     if(index == videoList.size -1) {
                         nextVideo = videoList.get(0)
                         Timber.v("val next vit $nextVideo")
@@ -277,6 +279,10 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
                     }
                 }
             }
+        } else if (videoList.size == 1) {
+            nextVideo = videoList.get(0)
+        }
+
         //url = videoList.indexOf(urlString).toString()
 
     }
