@@ -18,6 +18,7 @@ package com.android.tv.reference
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -47,6 +48,8 @@ class MainActivity : FragmentActivity() {
 
         setContentView(R.layout.activity_main)
 
+
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -58,11 +61,13 @@ class MainActivity : FragmentActivity() {
             },
             application
         )
-        if (castHelper.validateAndProcessCastIntent(intent)) {
+       /* if (castHelper.validateAndProcessCastIntent(intent)) {
             return
-        }
+        }*/
 
         loadDeepLinkOrStartingPage(intent.data)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     /**

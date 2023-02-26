@@ -55,10 +55,10 @@ class WatchNextPlaybackStateListener(private val context: Context) : PlaybackSta
         // Run on a background thread to process playback states and do relevant operations for
         // Watch Next.
         Timber.d("Trigger WorkManager with updated watchData $watchData")
-        WorkManager.getInstance(context.applicationContext).enqueue(
+        /*WorkManager.getInstance(context.applicationContext).enqueue(
             OneTimeWorkRequest.Builder(WatchNextWorker::class.java)
                 .setInputData(watchData)
                 .build()
-        )
+        )*/
     }
 }

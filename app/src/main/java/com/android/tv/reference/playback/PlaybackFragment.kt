@@ -150,7 +150,6 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         if(connection) {*/
         Timber.v("my url $myUrl")
             if(myUrl.length < 5) {
-
                 video = myVideo
             } else {
                 //Timber.v("my url2 $myUrl")
@@ -510,7 +509,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         // Update the player UI fairly often. The frequency of updates affects several UI components
         // such as the smoothness of the progress bar and time stamp labels updating. This value can
         // be tweaked for better performance.
-        private val PLAYER_UPDATE_INTERVAL_MILLIS = Duration.ofMillis(50).toMillis()
+        private val PLAYER_UPDATE_INTERVAL_MILLIS = Duration.ofMillis(5000).toMillis()
 
         // A short name to identify the media session when debugging.
         private const val MEDIA_SESSION_TAG = "ReferenceAppKotlin"
