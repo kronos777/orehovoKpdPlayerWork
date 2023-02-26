@@ -86,13 +86,13 @@ class NoFirebaseFragment : Fragment() {
             val builder = StringBuilder()
             try {
                 val doc: Document =
-                    Jsoup.connect("http://iziboro0.beget.tech/kummedia/orehovo").get()
+                    Jsoup.connect("http://iziboro0.beget.tech/kummedia/pposad/").get()
                 val links: Elements = doc.select("li")
 
                 val mExampleList = ArrayList<String>()
                 for (link in links) {
                     mExampleList.add(Html.fromHtml(link.toString()).toString())
-
+                  //  Log.d("errorsite", link.toString())
                 }
                 videoList = mExampleList
 

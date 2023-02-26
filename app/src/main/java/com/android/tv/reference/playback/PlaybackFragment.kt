@@ -20,14 +20,11 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.Html
-import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.OnActionClickedListener
 import androidx.navigation.fragment.findNavController
 import com.android.tv.reference.R
 import com.android.tv.reference.auth.NoFirebaseFragment
@@ -44,6 +41,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import timber.log.Timber
+import java.io.File
 import java.io.IOException
 import java.time.Duration
 
@@ -117,12 +115,14 @@ class PlaybackFragment : VideoSupportFragment() {
             "KPD group",
             "videoItem In this mini series, Surma introduces you to the various functional methods that JavaScript Arrays have to offer. In this episode: map & filter!",
             "https://atv-reference-app.firebaseapp.com/clips-supercharged/supercharged-map-and-filter",
-            "http://iziboro0.beget.tech/kummedia/orehovo/apteca.mp4",
+            "http://iziboro0.beget.tech/kummedia/pposad/kpd.mp4",
             "https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter-thumbnail.png",
             "https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter-background.jpg",
             "Supercharged Clips",
             VideoType.CLIP,
         )
+
+        deleteCache(activity!!.applicationContext)
         //video uri
         //https://storage.googleapis.com/atv-reference-app-videos/clips-supercharged/supercharged-map-and-filter.mp4
 
@@ -148,9 +148,9 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         parseParams()
       /*  val connection = hasConnection(getActivity()!!.applicationContext)
         if(connection) {*/
-
+        Timber.v("my url $myUrl")
             if(myUrl.length < 5) {
-                //Timber.v("my url $myUrl")
+
                 video = myVideo
             } else {
                 //Timber.v("my url2 $myUrl")
@@ -370,7 +370,7 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
             val builder = StringBuilder()
             try {
                 val doc: Document =
-                    Jsoup.connect("http://iziboro0.beget.tech/kummedia/orehovo").get()
+                    Jsoup.connect("http://iziboro0.beget.tech/kummedia/pposad/").get()
                 val links: Elements = doc.select("li")
 
                 val mExampleList = ArrayList<String>()
@@ -446,6 +446,31 @@ if (PlaybackFragmentArgs.fromBundle(requireArguments()).video == null) {
         viewModel.onStateChange(VideoPlaybackState.Load(video))
     }
 
+
+    fun deleteCache(context: Context) {
+        try {
+            val dir: File = context.cacheDir
+            deleteDir(dir)
+        } catch (e: Exception) {
+        }
+    }
+
+    fun deleteDir(dir: File?): Boolean {
+        return if (dir != null && dir.isDirectory()) {
+            val children: Array<String> = dir.list()
+            for (i in children.indices) {
+                val success = deleteDir(File(dir, children[i]))
+                if (!success) {
+                    return false
+                }
+            }
+            dir.delete()
+        } else if (dir != null && dir.isFile()) {
+            dir.delete()
+        } else {
+            false
+        }
+    }
 
     private fun parseParams() {
         val args = requireArguments()
